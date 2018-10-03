@@ -188,14 +188,14 @@ plt.show()
 
 # 截取离群值
 california_housing_dataFrame["rooms_per_person"] = (
-    california_housing_dataFrame["rooms_per_person"]).apply(lambda x: min(x, 4.8))
+    california_housing_dataFrame["rooms_per_person"]).apply(lambda x: min(x, 4))
 
 _ = california_housing_dataFrame["rooms_per_person"].hist()
 plt.show()
 
 calibration_data = train_model(
     learning_rate=0.05,
-    steps=500,
+    steps=600,
     batch_size=5,
     input_feature="rooms_per_person"
 )
