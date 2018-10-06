@@ -14,6 +14,11 @@ import tensorflow as tf
 from tensorflow.python.data import Dataset
 
 __arthur__ = "张俊鹏"
+# 学习目标：
+#
+# 使用多个特征而非单个特征来进一步提高模型的有效性
+# 调试模型输入数据中的问题
+# 使用测试数据集检查模型是否过拟合验证数据
 
 tf.logging.set_verbosity(tf.logging.ERROR)
 pd.options.display.max_rows = 10

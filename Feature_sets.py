@@ -16,6 +16,7 @@ import tensorflow as tf
 from tensorflow.python.data import Dataset
 
 __arthur__ = "张俊鹏"
+# 学习目标：创建一个包含极少特征但效果与更复杂的特征集一样出色的集合
 
 tf.logging.set_verbosity(tf.logging.ERROR)
 pd.options.display.max_rows = 10
