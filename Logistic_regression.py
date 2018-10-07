@@ -359,16 +359,37 @@ def train_linear_classifier_model(
     return linear_classifier
 
 
+# 一个可能有用的解决方案是，只要不过拟合，就训练更长时间。
+# 要做到这一点，我们可以增加步数和/或批量大小。
+# 所有指标同时提升，这样，我们的损失指标就可以很好地代理 AUC 和准确率了。
+# 注意它是如何进行很多很多次迭代，只是为了再尽量增加一点 AUC。这种情况很常见，但通常情况下，即使只有一点小小的收获，投入的成本也是值得的。
+# TUNE THE SETTINGS BELOW TO IMPROVE AUC
 linear_classifier = train_linear_classifier_model(
-    learning_rate=0.000005,
-    steps=500,
-    batch_size=20,
+    learning_rate=0.000003,
+    steps=20000,
+    batch_size=500,
     training_examples=training_examples,
     training_targets=training_targets,
     validation_examples=validation_examples,
     validation_targets=validation_targets)
 
+predict_validation_input_fn = lambda: my_input_fn(validation_examples,
+                                                  validation_targets["median_house_value_is_high"], num_epochs=1,
+                                                  shuffle=False)
 # 任务 3：计算准确率并为验证集绘制 ROC 曲线
 # 分类时非常有用的一些指标包括：模型准确率、ROC 曲线和 ROC 曲线下面积 (AUC)。我们会检查这些指标。
 # LinearClassifier.evaluate 可计算准确率和 AUC 等实用指标。
 evaluation_metrics = linear_classifier.evaluate(input_fn=predict_validation_input_fn)
+
+print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
+print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
+
+validation_probabilities = linear_classifier.predict(input_fn=predict_validation_input_fn)
+# Get just the probabilities for the positive class.
+validation_probabilities = np.array([item["probabilities"][1] for item in validation_probabilities])
+
+false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(validation_targets, validation_probabilities)
+plt.plot(false_positive_rate, true_positive_rate, label="our model")
+plt.plot([0, 1], [0, 1], label="random classifier")
+plt.legend(loc=2)
+plt.show()
