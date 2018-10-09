@@ -80,11 +80,11 @@ def preprocess_targets(california_housing_dataFrame):
     return output_targets
 
 
-training_examples = preprocess_features(california_housing_dataFrame.sample(12000))
-training_targets = preprocess_targets(california_housing_dataFrame.sample(12000))
+training_examples = preprocess_features(california_housing_dataFrame.head(12000))
+training_targets = preprocess_targets(california_housing_dataFrame.head(12000))
 
-validation_examples = preprocess_features(california_housing_dataFrame.sample(5000))
-validation_targets = preprocess_targets(california_housing_dataFrame.sample(5000))
+validation_examples = preprocess_features(california_housing_dataFrame.tail(5000))
+validation_targets = preprocess_targets(california_housing_dataFrame.tail(5000))
 
 # Double-check that we've done the right thing.
 print("Training examples summary:")
@@ -337,6 +337,7 @@ def train_linear_classifier_model(
         validation_probabilities = linear_classifier.predict(input_fn=predict_validation_input_fn)
         validation_probabilities = np.array([item["probabilities"] for item in validation_probabilities])
 
+
         training_log_loss = metrics.log_loss(training_targets, training_probabilities)
         validation_log_loss = metrics.log_loss(validation_targets, validation_probabilities)
         # Occasionally print the current loss.
@@ -391,5 +392,5 @@ validation_probabilities = np.array([item["probabilities"][1] for item in valida
 false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(validation_targets, validation_probabilities)
 plt.plot(false_positive_rate, true_positive_rate, label="our model")
 plt.plot([0, 1], [0, 1], label="random classifier")
-plt.legend(loc=2)
+_ = plt.legend(loc=2)
 plt.show()

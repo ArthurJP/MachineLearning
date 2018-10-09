@@ -27,8 +27,8 @@ pd.options.display.float_format = '{:.1f}'.format
 california_housing_dataFrame = pd.read_csv("data/california_housing_train_for_tensorFlow.csv", sep=",")
 
 
-# california_housing_dataFrame = california_housing_dataFrame.reindex(
-#     np.random.permutation(california_housing_dataFrame.index))
+california_housing_dataFrame = california_housing_dataFrame.reindex(
+    np.random.permutation(california_housing_dataFrame.index))
 
 def preprocess_features(california_housing_dataFrame):
     """Prepares input features from California housing data set.
@@ -75,19 +75,15 @@ def preprocess_targets(california_housing_dataFrame):
 
 
 # 对于训练集，我们从共 17000 个样本中选择前 12000 个样本。
-# training_examples = preprocess_features(california_housing_dataFrame.head(12000))
-training_examples = preprocess_features(california_housing_dataFrame.sample(12000))
+training_examples = preprocess_features(california_housing_dataFrame.head(12000))
 print(training_examples.describe())
-# training_targets = preprocess_targets(california_housing_dataFrame.head(12000))
-training_targets = preprocess_targets(california_housing_dataFrame.sample(12000))
+training_targets = preprocess_targets(california_housing_dataFrame.head(12000))
 print(training_targets.describe())
 
 # 对于验证集，我们从共 17000 个样本中选择后 5000 个样本。
-# validation_examples = preprocess_features(california_housing_dataFrame.tail(5000))
-validation_examples = preprocess_features(california_housing_dataFrame.sample(5000))
+validation_examples = preprocess_features(california_housing_dataFrame.tail(5000))
 print(validation_examples.describe())
-# validation_targets = preprocess_targets(california_housing_dataFrame.tail(5000))
-validation_targets = preprocess_targets(california_housing_dataFrame.sample(5000))
+validation_targets = preprocess_targets(california_housing_dataFrame.tail(5000))
 print(validation_targets.describe())
 
 # 任务 1：检查数据

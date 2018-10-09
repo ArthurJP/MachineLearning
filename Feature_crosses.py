@@ -82,11 +82,11 @@ def preprocess_targets(california_housing_dataFrame):
     return output_targets
 
 
-training_examples = preprocess_features(california_housing_dataFrame.sample(12000))
-training_targets = preprocess_targets(california_housing_dataFrame.sample(12000))
+training_examples = preprocess_features(california_housing_dataFrame.head(12000))
+training_targets = preprocess_targets(california_housing_dataFrame.head(12000))
 
-validation_examples = preprocess_features(california_housing_dataFrame.sample(5000))
-validation_targets = preprocess_targets(california_housing_dataFrame.sample(5000))
+validation_examples = preprocess_features(california_housing_dataFrame.tail(5000))
+validation_targets = preprocess_targets(california_housing_dataFrame.tail(5000))
 
 # Double-check that we've done the right thing.
 print("Training examples summary:")
