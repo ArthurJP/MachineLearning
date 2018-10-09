@@ -306,7 +306,7 @@ def train_linear_classifier_model(
 
 # 正则化强度为 0.1 应该就足够了。请注意，有一个需要做出折中选择的地方：正则化越强，我们获得的模型就越小，但会影响分类损失。
 linear_classifier = train_linear_classifier_model(
-    learning_rate=0.01,
+    learning_rate=0.1,
     regularization_strength=0.1,
     steps=300,
     batch_size=100,
