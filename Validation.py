@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import math
+import sys
 
 from IPython import display
 from matplotlib import cm
@@ -26,9 +27,9 @@ pd.options.display.float_format = '{:.1f}'.format
 
 california_housing_dataFrame = pd.read_csv("data/california_housing_train_for_tensorFlow.csv", sep=",")
 
-
 california_housing_dataFrame = california_housing_dataFrame.reindex(
     np.random.permutation(california_housing_dataFrame.index))
+
 
 def preprocess_features(california_housing_dataFrame):
     """Prepares input features from California housing data set.
@@ -52,8 +53,8 @@ def preprocess_features(california_housing_dataFrame):
     processed_features = selected_features.copy()
     # Create a synthetic feature.
     processed_features["rooms_per_person"] = (
-            california_housing_dataFrame["total_rooms"] / california_housing_dataFrame["population"]
-    )
+            california_housing_dataFrame["total_rooms"] /
+            california_housing_dataFrame["population"])
     return processed_features
 
 
@@ -126,9 +127,11 @@ _ = plt.plot()
 
 plt.show()
 
+sys.exit()
+
 
 # 任务 3：返回来看数据导入和预处理代码，看一下您是否发现了任何错误
-# 样本要使用sample采样
+# 样本要随机化
 
 
 # 任务 4：训练和评估模型

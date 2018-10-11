@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 import math
+import sys
 
 from IPython import display
 from matplotlib import cm
@@ -92,6 +93,36 @@ display.display(training_targets.describe())
 print("Validation targets summary:")
 display.display(validation_targets.describe())
 
+plt.figure(figsize=(13, 8))
+
+ax = plt.subplot(1, 2, 1)
+ax.set_title("Validation Data")
+
+ax.set_autoscaley_on(False)
+ax.set_ylim([32, 43])
+ax.set_autoscalex_on(False)
+ax.set_xlim([-126, -112])
+plt.scatter(validation_examples["longitude"],
+            validation_examples["latitude"],
+            cmap="coolwarm",
+            c=validation_targets["median_house_value_is_high"] / validation_targets["median_house_value_is_high"].max())
+
+ax = plt.subplot(1, 2, 2)
+ax.set_title("Training Data")
+
+ax.set_autoscaley_on(False)
+ax.set_ylim([32, 43])
+ax.set_autoscalex_on(False)
+ax.set_xlim([-126, -112])
+plt.scatter(training_examples["longitude"],
+            training_examples["latitude"],
+            cmap="coolwarm",
+            c=training_targets["median_house_value_is_high"] / training_targets["median_house_value_is_high"].max())
+_ = plt.plot()
+plt.show()
+
+sys.exit()
+
 
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     """Trains a linear regression model.
@@ -124,8 +155,7 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
 
 def get_quantile_based_buckets(feature_values, num_buckets):
     quantiles = feature_values.quantile(
-        [(i + 1.) / (num_buckets + 1.) for i in range(num_buckets)]
-    )
+        [(i + 1.) / (num_buckets + 1.) for i in range(num_buckets)])
     return [quantiles[q] for q in quantiles.keys()]
 
 
@@ -135,6 +165,7 @@ def construct_feature_columns():
     Returns:
         A set of feature columns
     """
+
     bucketized_households = tf.feature_column.bucketized_column(
         tf.feature_column.numeric_column("households"),
         boundaries=get_quantile_based_buckets(training_examples["households"], 10))
@@ -285,6 +316,7 @@ def train_linear_classifier_model(
         training_log_loss = metrics.log_loss(training_targets, training_probabilities)
         validation_log_loss = metrics.log_loss(validation_targets, validation_probabilities)
         # Occasionally print the current loss.
+        print("  period %02d : %0.2f" % (period, training_log_loss))
         print("  period %02d : %0.2f" % (period, validation_log_loss))
         # Add the loss metrics from this period to our list.
         training_log_losses.append(training_log_loss)
@@ -307,7 +339,7 @@ def train_linear_classifier_model(
 # 正则化强度为 0.1 应该就足够了。请注意，有一个需要做出折中选择的地方：正则化越强，我们获得的模型就越小，但会影响分类损失。
 linear_classifier = train_linear_classifier_model(
     learning_rate=0.1,
-    regularization_strength=0.1,
+    regularization_strength=0.3,
     steps=300,
     batch_size=100,
     feature_columns=construct_feature_columns(),

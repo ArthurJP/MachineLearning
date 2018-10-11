@@ -74,8 +74,10 @@ print(cities.reindex(np.random.permutation(cities.index)))
 print("third")
 print(cities.reindex(np.random.permutation(cities.index)))
 
-
-
 # 这种行为是可取的，因为索引通常是从实际数据中提取的字符串（请参阅 pandas reindex 文档，查看索引值是浏览器名称的示例）。
 # 在这种情况下，如果允许出现“丢失的”索引，您将可以轻松使用外部列表重建索引，因为您不必担心会将输入清理掉。
 print(cities.reindex([0, 4, 5, 2]))
+
+reindexd = cities.reindex([0, 4, 5, 2])
+print(reindexd.head(3))
+print(reindexd.tail(2))
