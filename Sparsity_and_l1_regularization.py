@@ -121,7 +121,7 @@ plt.scatter(training_examples["longitude"],
 _ = plt.plot()
 plt.show()
 
-sys.exit()
+# sys.exit()
 
 
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):

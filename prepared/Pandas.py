@@ -17,7 +17,7 @@ city_names = pd.Series(['San Francisco', "San Jose", "Sacramento"])
 population = pd.Series([852469, 1015785, 485199])
 
 # 从文件中获取数据
-california_housing_dataframe = pd.read_csv("data/california_housing_train_for_pandas.csv", sep=',')
+california_housing_dataframe = pd.read_csv("../data/california_housing_train_for_pandas.csv", sep=',')
 print(california_housing_dataframe.describe())  # 对数据进行描述：最值、均值、标准值……
 print(california_housing_dataframe.head())  # 取前五行数据
 print(california_housing_dataframe.hist('housing_median_age'))  # 一个列中值的分布
