@@ -347,5 +347,78 @@ training_examples.hist(bins=20, figsize=(18, 20), xlabelsize=2)
 plt.show()
 
 
+# 拉大左侧的离散程度
 def log_normalize(series):
     return series.apply(lambda x: math.log(x + 1.0))
+
+
+def clip(series, clip_to_min, clip_to_max):
+    return series.apply(lambda x: (
+        min(max(x, clip_to_min), clip_to_max)))
+
+
+def z_score_normalize(series):
+    mean = series.mean()
+    std_dv = series.std()
+    return series.apply(lambda x: (x - mean) / std_dv)
+
+
+def binary_threshold(series, threshold):
+    return series.apply(lambda x: (1 if x > threshold else 0))
+
+
+def normalize(examples_dataFrame):
+    """Returns a version of the input `DataFrame` that has all its features normalized."""
+    processed_features = pd.DataFrame()
+
+    processed_features["households"] = log_normalize(examples_dataFrame["households"])
+    processed_features["median_income"] = log_normalize(examples_dataFrame["median_income"])
+    processed_features["total_bedrooms"] = log_normalize(examples_dataFrame["total_bedrooms"])
+
+    processed_features["latitude"] = linear_scale(examples_dataFrame["latitude"])
+    processed_features["longitude"] = linear_scale(examples_dataFrame["longitude"])
+    processed_features["housing_median_age"] = linear_scale(examples_dataFrame["housing_median_age"])
+
+    processed_features["population"] = linear_scale(clip(examples_dataFrame["population"], 0, 5000))
+    processed_features["rooms_per_person"] = linear_scale(clip(examples_dataFrame["rooms_per_person"], 0, 5))
+    processed_features["total_rooms"] = linear_scale(clip(examples_dataFrame["total_rooms"], 0, 10000))
+
+    return processed_features
+
+
+normalized_dataFrame = normalize(preprocess_features(california_housing_dataFrame))
+normalized_training_examples = normalized_dataFrame.head(12000)
+normalized_validation_examples = normalized_dataFrame.tail(5000)
+
+
+# _ = train_nn_regression_model(
+#     my_optimizer=tf.train.AdagradOptimizer(learning_rate=0.15),
+#     steps=1000,
+#     batch_size=50,
+#     hidden_units=[10, 10],
+#     training_examples=normalized_training_examples,
+#     training_targets=training_targets,
+#     validation_examples=normalized_validation_examples,
+#     validation_targets=validation_targets)
+
+def position_normalize(examples_dataFrame):
+    processed_features = pd.DataFrame()
+    processed_features["latitude"] = linear_scale(examples_dataFrame["latitude"])
+    processed_features["longitude"] = linear_scale(examples_dataFrame["longitude"])
+
+    return processed_features
+
+
+position_dataFrame = normalize(preprocess_features(california_housing_dataFrame))
+position_training_examples = position_dataFrame.head(12000)
+position_validation_examples = position_dataFrame.tail(5000)
+
+_ = train_nn_regression_model(
+    my_optimizer=tf.train.AdagradOptimizer(learning_rate=0.05),
+    steps=500,
+    batch_size=50,
+    hidden_units=[10, 10, 5, 5],
+    training_examples=position_training_examples,
+    training_targets=training_targets,
+    validation_examples=position_validation_examples,
+    validation_targets=validation_targets)
