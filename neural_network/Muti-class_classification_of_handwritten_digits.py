@@ -360,7 +360,7 @@ def train_nn_classification_model(
         validation_predictions = list(classifier.predict(input_fn=predict_validation_input_fn))
         validation_probabilities = np.array([item['probabilities'] for item in validation_predictions])
         validation_pred_class_id = np.array([item['class_ids'][0] for item in validation_predictions])
-        validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 10)
+        validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 10)  # 根据id将其分为10类种的一种病标记label
 
         # Compute training and validation errors.
         training_log_loss = metrics.log_loss(training_targets, training_pred_one_hot)
@@ -446,7 +446,7 @@ num_rows = int(math.ceil(num_nodes / 10.0))
 fig, axes = plt.subplots(num_rows, 10, figsize=(20, 2 * num_rows))
 for coef, ax in zip(weights0.T, axes.ravel()):
     # Weights in coef is reshaped from 1x784 to 28x28.
-    ax.matshow(coef.reshape(29, 29), cmap=plt.cm.pink)
+    ax.matshow(coef.reshape(28, 28), cmap=plt.cm.pink)
     ax.set_xticks(())
     ax.set_yticks(())
 
