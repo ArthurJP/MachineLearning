@@ -2,9 +2,26 @@
   <dictionary name="Administrator">
     <words>
       <w>bucketized</w>
+      <w>comv</w>
+      <w>convnet</w>
+      <w>convolutional</w>
+      <w>crossentropy</w>
+      <w>datagen</w>
       <w>ftrl</w>
+      <w>gridlines</w>
+      <w>keras</w>
+      <w>matplotlib</w>
+      <w>maxpool</w>
+      <w>maxpooling</w>
+      <w>overfitting</w>
+      <w>postprocess</w>
+      <w>preprocess</w>
+      <w>preprocessing</w>
       <w>quantile</w>
       <w>regressor</w>
+      <w>relu</w>
+      <w>resized</w>
+      <w>uint</w>
     </words>
   </dictionary>
 </component>
