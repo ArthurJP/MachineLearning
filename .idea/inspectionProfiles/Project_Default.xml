@@ -36,6 +36,7 @@
           <option value="tuple.set_ylim" />
           <option value="tuple.set_autoscalex_on" />
           <option value="tuple.set_xlim" />
+          <option value="tuple.axis" />
         </list>
       </option>
     </inspection_tool>

@@ -278,8 +278,11 @@ import numpy as np
 import random
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
+# Ignoring error, the code can be proceed.
+np.seterr(divide='ignore', invalid='ignore')
+
 # Let's define a new Model that will take an image as input, and will output
-# intermediate representations for all layers in the previous model after the fitst.
+# intermediate representations for all layers in the previous model after the first.
 successive_outputs = [layer.output for layer in model.layers[1:]]
 visualization_model = Model(img_input, successive_outputs)
 
@@ -299,21 +302,21 @@ x /= 255
 # intermediate representations for this image.
 successive_feature_maps = visualization_model.predict(x)
 
-# These are the names of the layers, so can have them as part of out plot
+# These are the names of the layers, so can have them as part of our plot
 layer_names = [layer.name for layer in model.layers]
 
 # Now let's display our representations.
 for layer_name, feature_map in zip(layer_names, successive_feature_maps):
     if len(feature_map.shape) == 4:
-        # Just do this for the comv / maxpool layers, not the fully-connected layers
+        # Just do this for the conv / maxpool layers, not the fully-connected layers
         n_features = feature_map.shape[-1]  # number of features in feature map
-        # The feature map has shape (1, size, size, m_feature)
+        # The feature map has shape (1, size, size, n_features)
         size = feature_map.shape[1]
         # We will tile our images in this matrix
         display_grid = np.zeros((size, size * n_features))
         for i in range(n_features):
             # Postprocess the feature to make it visually palatable
-            x = feature_map[0, :, :, i]  # ????
+            x = feature_map[0, :, :, i]  # change what feature_map refer to
             x -= x.mean()
             x /= x.std()
             x *= 64
@@ -323,7 +326,69 @@ for layer_name, feature_map in zip(layer_names, successive_feature_maps):
             display_grid[:, i * size: (i + 1) * size] = x
         # Display the grid
         scale = 20. / n_features
+        plt.tight_layout()
         plt.figure(figsize=(scale * n_features, scale))
         plt.title(layer_name)
         plt.grid(False)
         plt.imshow(display_grid, aspect="auto", cmap="viridis")
+
+plt.show()
+# As you can see we go from the raw pixels of the images to increasingly abstract and compact representations.
+# The representations downstream start highlighting what the network pays attention to, and they show fewer and
+# fewer features being "activated"; most are set to zero. This is called "sparsity". Representation sparsity is
+# a key feature of deep learning.
+# These representations carry increasingly less information about the original pixels of the image, but increasingly
+# refined information about the class of the image. You can think of a convnet(or a deep network in general) as
+# an information distillation pipeline.
+
+
+# Evaluating Accuracy and Loss for the Model
+# Let's plot the training/validation accuracy and loss as collected during training.
+
+# Retrieve a list of accuracy results on training and test data sets for each training epoch
+acc = history.history["acc"]
+val_acc = history.history["val_acc"]
+
+# Retrieve a list of list results on training and test data sets for each training epoch.
+loss = history.history["loss"]
+val_loss = history.history["val_loss"]
+
+# Get number of epochs
+epochs = range(len(acc))
+
+# Plot training and validation accuracy per epoch
+plt.plot(epochs, acc)
+plt.plot(epochs, val_acc)
+plt.title("Training and validation accuracy")
+
+plt.figure()
+
+# Plot training and validation loss per epoch
+plt.plot(epochs, loss)
+plt.plot(epochs, val_loss)
+plt.title("Training and validation loss")
+
+plt.show()
+
+# As you can see, we are overfitting like it's getting out of fashion. Our training accuracy (in
+# blue) gets close to 100%(!) while our validation accuracy (in green) stalls as 70%. Our
+# validation loss reaches its minimum after only five epochs.
+# Since we have a relatively small number of training examples(2000), overfitting should be
+# our number one concern. Overfitting happens when a model exposed to too few examples learns
+# patterns that do not generalize to new data, i.e. when the model starts using irrelevant
+# features for making predictions. For instance, if you, as a human, only see three images of
+# people who are lumberjacks, and three images of people who are sailors, and among them the
+# only person waring a cap is a lumberjack, you might start thinking that waring a cap is
+# a sign of being a lumberjack as opposed to a sailor. You would then make a pretty lousy
+# lumberjack/sailor classifier.
+# Overfitting is the central problem in machine learning: given that we are fitting the parameters
+# of our model to a given dataset, how can we make sure that the representations learned by
+# the model will be applicable to data never seen before? How do we avoid learning things that
+# are specific to the training data?
+# In the next exercise, we'll look at ways to prevent overfitting in the cat vs. dog classification model.
+
+
+# Clean Up
+# Before running the net exercise, run the following cell to terminate the kernel and free memory resources.
+import os,signal
+os.kill(os.getpid(),signal.SIGKILL)
