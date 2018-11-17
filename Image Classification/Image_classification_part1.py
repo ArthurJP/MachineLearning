@@ -22,6 +22,11 @@ __arthur__ = "张俊鹏"
 #
 # NOTE: The 2,000 images used in this exercise are excerpted from the "Dogs vs. Cats" dataset available on Kaggle, which contains 25,000 images. Here, we use a subset of the full dataset to decrease training time for educational purposes.
 
+# !wget --no-check-certificate \
+#    https://storage.googleapis.com/mledu-datasets/cats_and_dogs_filtered.zip -O \
+#    /tmp/cats_and_dogs_filtered.zip
+
+
 # local_zip = "../data/cats_and_dogs_filtered.zip"
 # zip_ref = zipfile.ZipFile(local_zip, "r")
 # zip_ref.extractall("../data/")
@@ -364,6 +369,8 @@ plt.title("Training and validation accuracy")
 plt.figure()
 
 # Plot training and validation loss per epoch
+plt.ylabel("RMSE")
+plt.xlabel("Periods")
 plt.plot(epochs, loss)
 plt.plot(epochs, val_loss)
 plt.title("Training and validation loss")
