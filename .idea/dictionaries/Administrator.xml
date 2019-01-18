@@ -5,6 +5,7 @@
       <w>comv</w>
       <w>conv</w>
       <w>convnet</w>
+      <w>convnets</w>
       <w>convolutional</w>
       <w>crossentropy</w>
       <w>datagen</w>
@@ -19,11 +20,15 @@
       <w>maxpooling</w>
       <w>overfitting</w>
       <w>postprocess</w>
+      <w>preloaded</w>
       <w>preprocess</w>
       <w>preprocessing</w>
+      <w>pretrained</w>
       <w>quantile</w>
       <w>regressor</w>
       <w>relu</w>
+      <w>repurposability</w>
+      <w>repurposing</w>
       <w>resized</w>
       <w>uint</w>
     </words>
